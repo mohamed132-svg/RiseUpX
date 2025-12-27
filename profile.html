@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>RiseUpX - Profile</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiseUpX - Profile</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div class="container">
-  <h1>Profile</h1>
-  <p>Goals: <span id="profileGoals"></span></p>
-  <textarea id="journal" placeholder="Write your reflections..."></textarea>
-  <button onclick="saveJournal()">Save Journal</button>
-  <a href="./dashboard.html" class="btn">Dashboard</a>
-</div>
-<script src="script.js"></script>
+  <div class="profile-container">
+    <h1>User Profile</h1>
+    <p>Name: <span id="profileName"></span></p>
+    <p>Path: <span id="profilePath"></span></p>
+    <p>Level: <span id="profileLevel"></span></p>
+    <p>XP: <span id="profileXP"></span></p>
+    <p>Streak: <span id="profileStreak"></span> 🔥</p>
+    <button onclick="resetProgress()">Reset Progress</button>
+    <button onclick="navigate('dashboard.html')">Back to Dashboard</button>
+  </div>
+
+  <script src="./script.js"></script>
 </body>
 </html>
