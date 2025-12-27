@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>RiseUpX - Progress</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiseUpX - Progress</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div class="container">
-  <h1>Progress</h1>
-  <p>Level: <span id="progressLevel"></span></p>
-  <p>XP: <span id="progressXP"></span></p>
-  <p>Streak: <span id="progressStreak"></span> 🔥</p>
-  <p>Tasks Completed: <span id="tasksDone"></span></p>
-  <a href="./dashboard.html" class="btn">Dashboard</a>
-</div>
-<script src="script.js"></script>
+  <div class="progress-container">
+    <h1>Your Progress</h1>
+    <p>Level: <span id="progressLevel"></span></p>
+    <p>XP: <span id="progressXP"></span></p>
+    <p>Streak: <span id="progressStreak"></span> 🔥</p>
+    <p>Mastery: <span id="progressMastery">0%</span></p>
+    <button onclick="navigate('dashboard.html')">Back to Dashboard</button>
+  </div>
+
+  <script src="./script.js"></script>
 </body>
 </html>
