@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>RiseUpX - Home</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiseUpX - Dashboard</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div class="container">
-  <h1 id="welcome">Welcome, User</h1>
-  <div class="dashboard">
-    <p>Level: <span id="level">1</span></p>
-    <p>XP: <span id="xp">0</span></p>
-    <p>Streak: <span id="streak">0</span> 🔥</p>
-    <p>Mindset Lesson:</p>
-    <p id="mindset">Start building discipline today!</p>
+  <div class="dashboard-container">
+    <h1 id="welcomeUser">Hello, User</h1>
+    <p>Your Path: <span id="userPath"></span></p>
+    <p>Current Level: <span id="currentLevel">1</span></p>
+    <p>XP: <span id="currentXP">0</span></p>
+    <p>Streak: <span id="currentStreak">0</span> 🔥</p>
+
+    <div class="dashboard-tabs">
+      <button onclick="navigate('levels.html')">Levels</button>
+      <button onclick="navigate('tasks.html')">Tasks</button>
+      <button onclick="navigate('progress.html')">Progress</button>
+      <button onclick="navigate('profile.html')">Profile</button>
+    </div>
   </div>
-  <div class="nav-buttons">
-    <a href="./tasks.html" class="btn">Tasks</a>
-    <a href="./levels.html" class="btn">Levels</a>
-    <a href="./progress.html" class="btn">Progress</a>
-    <a href="./profile.html" class="btn">Profile</a>
-  </div>
-</div>
-<script src="script.js"></script>
+
+  <script src="./script.js"></script>
 </body>
 </html>
