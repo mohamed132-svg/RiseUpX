@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>RiseUpX - Tasks</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiseUpX - Tasks</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div class="container">
-  <h1>Tasks</h1>
-  <ul id="taskList"></ul>
-  <button onclick="completeAll()">Complete All Tasks</button>
-  <a href="./dashboard.html" class="btn">Dashboard</a>
-</div>
-<script src="script.js"></script>
+  <div class="tasks-container">
+    <h1>Tasks & Projects</h1>
+    <div id="tasksList"></div>
+    <button onclick="navigate('dashboard.html')">Back to Dashboard</button>
+  </div>
+
+  <script src="./script.js"></script>
 </body>
 </html>
