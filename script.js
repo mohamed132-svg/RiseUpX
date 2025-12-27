@@ -1,161 +1,176 @@
-// --- User Setup ---
-function start() {
-  const goals = [];
-  document.querySelectorAll('#goalSelection input:checked').forEach(input => goals.push(input.value));
-  if(goals.length===0){ alert("Select at least one goal!"); return; }
-  localStorage.setItem('userGoals', JSON.stringify(goals));
-  localStorage.setItem('level', 1);
-  localStorage.setItem('xp', 0);
-  localStorage.setItem('streak', 0);
-  localStorage.setItem('tasksDone', 0);
-  localStorage.setItem('journal', '');
-  localStorage.setItem('lastDate', new Date().toDateString());
-  localStorage.setItem('completedLevels', JSON.stringify([1])); // Level 1 unlocked
-  window.location.href='./dashboard.html';
-}
+// ======== INITIAL SETUP ========
+let username = localStorage.getItem('username') || '';
+let userPath = localStorage.getItem('userPath') || '';
+let currentLevel = parseInt(localStorage.getItem('currentLevel')) || 1;
+let currentXP = parseInt(localStorage.getItem('currentXP')) || 0;
+let currentStreak = parseInt(localStorage.getItem('currentStreak')) || 0;
+let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || {};
+let journalEntries = JSON.parse(localStorage.getItem('journalEntries')) || {};
 
-// --- Mindset Lessons ---
-const mindsetLessons = {
-  1:"Start building discipline today!",
-  2:"Keep pushing, consistency is key!",
-  3:"Small daily wins create momentum!",
-  4:"Focus sharpens skill!",
-  5:"Your habits define your future!",
-  6:"Challenge yourself and grow!",
-  7:"Discipline beats motivation!",
-  8:"Reflect and improve every day!",
-  9:"Level up and inspire others!",
-  10:"Mastery is achieved through persistence!"
-};
+// ======== PATH SELECTION ========
+document.querySelectorAll('.path-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.path-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    userPath = btn.dataset.path;
+  });
+});
 
-// --- Tasks per Level ---
-const tasksPerLevel = {
-  1:["Complete 10 push-ups","Read 10 pages","Meditate 5 min","Write morning plan","Connect with a friend"],
-  2:["Draw 1 sketch","Try new brush in digital art","Design a simple logo","Organize workspace","Watch tutorial video"],
-  3:["Complete 2 sketches","Create moodboard","Share design on social media","Get feedback","Reflect in journal"],
-  4:["Design Instagram post","Experiment with color palette","Design a thumbnail","Fix alignment in previous work","Try typography pairing"],
-  5:["Redesign old poster","Create small logo set","Start mini portfolio","Track time spent on design","Journal progress"],
-  6:["Client project simulation","Design banner","Use advanced colors","Share for review","Reflect daily habits"],
-  7:["Create 3 social media posts","Brand a concept","Try 1 new design tool","Improve old design","Write lesson learned"],
-  8:["Make full portfolio page","Design poster series","Collaborate with friend","Test new typography","Journal insights"],
-  9:["Design branding kit","Create real thumbnail","Offer design for mock client","Review & improve","Reflect on growth"],
-  10:["Complete master project","Showcase work","Teach mini-lesson","Analyze improvement","Plan next steps"]
-};
-
-// --- Dashboard ---
-if(document.getElementById('welcome')){
-  const goals = JSON.parse(localStorage.getItem('userGoals')) || [];
-  document.getElementById('welcome').innerText = "Welcome, " + (goals.join(', ') || 'User');
-  const level = parseInt(localStorage.getItem('level'));
-  document.getElementById('level').innerText = level;
-  document.getElementById('xp').innerText = localStorage.getItem('xp');
-  document.getElementById('streak').innerText = localStorage.getItem('streak');
-  document.getElementById('mindset').innerText = mindsetLessons[level];
-}
-
-// --- Levels Page ---
-if(document.getElementById('levelsList')){
-  const list = document.getElementById('levelsList');
-  list.innerHTML='';
-  const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [1];
-  for(let i=1;i<=10;i++){
-    const li = document.createElement('li');
-    li.innerText = `Level ${i} ${completedLevels.includes(i)?'✅':'🔒'}`;
-    li.style.cursor = completedLevels.includes(i)?'pointer':'not-allowed';
-    if(completedLevels.includes(i)){
-      li.onclick = ()=>{ enterLevel(i); };
-    }
-    list.appendChild(li);
+document.getElementById('startBtn')?.addEventListener('click', () => {
+  const nameInput = document.getElementById('username')?.value.trim();
+  if (!nameInput || !userPath) {
+    alert('Enter your name and choose one path.');
+    return;
   }
+  username = nameInput;
+  localStorage.setItem('username', username);
+  localStorage.setItem('userPath', userPath);
+  localStorage.setItem('currentLevel', 1);
+  localStorage.setItem('currentXP', 0);
+  localStorage.setItem('currentStreak', 0);
+  localStorage.setItem('completedTasks', JSON.stringify({}));
+  window.location.href = 'dashboard.html';
+});
+
+// ======== DASHBOARD ========
+document.getElementById('welcomeUser')?.innerText = `Hello, ${username}`;
+document.getElementById('userPath')?.innerText = userPath;
+document.getElementById('currentLevel')?.innerText = currentLevel;
+document.getElementById('currentXP')?.innerText = currentXP;
+document.getElementById('currentStreak')?.innerText = currentStreak;
+
+// ======== NAVIGATION ========
+function navigate(page) {
+  window.location.href = page;
 }
 
-// --- Enter Level ---
-function enterLevel(lvl){
-  localStorage.setItem('level', lvl);
-  alert(`Entered Level ${lvl}`);
-  window.location.href='tasks.html';
-}
+// ======== MASTER PATHS ========
+const masteryPaths = {
+  coding: [
+    {level:1, tasks:[{title:"Install VSCode", explanation:"Download and install Visual Studio Code from official site."},{title:"Hello World", explanation:"Create a simple JS program that prints 'Hello World'."}]},
+    {level:2, tasks:[{title:"Variables & Data Types", explanation:"Learn about strings, numbers, arrays."},{title:"Functions", explanation:"Write functions and call them."}]},
+    {level:3, tasks:[{title:"Loops & Conditions", explanation:"Practice for-loops, while-loops, if-else."}]},
+    {level:4, tasks:[{title:"DOM Manipulation", explanation:"Use JS to change HTML content."}]},
+    {level:5, tasks:[{title:"Build a To-Do App", explanation:"Combine HTML, CSS, JS to make a simple app."}]},
+    {level:6, tasks:[{title:"Fetch API Data", explanation:"Learn to use fetch() and display API data."}]},
+    {level:7, tasks:[{title:"Async/Await", explanation:"Understand asynchronous code in JS."}]},
+    {level:8, tasks:[{title:"Project: Portfolio Website", explanation:"Build your own portfolio website."}]},
+    {level:9, tasks:[{title:"Debugging & Testing", explanation:"Learn debugging tools and unit tests."}]},
+    {level:10, tasks:[{title:"Mastery Project", explanation:"Build a fully functional web app with multiple features."}]}
+  ],
+  digitalart: [
+    {level:1, tasks:[{title:"Basic Shapes", explanation:"Draw circles, squares, and triangles digitally."}]},
+    {level:2, tasks:[{title:"Shading Techniques", explanation:"Learn to shade shapes for depth."}]},
+    {level:3, tasks:[{title:"Color Theory", explanation:"Learn primary, secondary, complementary colors."}]},
+    {level:4, tasks:[{title:"Character Design", explanation:"Design simple characters with proportions."}]},
+    {level:5, tasks:[{title:"Perspective Drawing", explanation:"Apply 1-point and 2-point perspective."}]},
+    {level:6, tasks:[{title:"Digital Painting", explanation:"Paint a simple scene digitally."}]},
+    {level:7, tasks:[{title:"Story Illustration", explanation:"Illustrate a short scene/story."}]},
+    {level:8, tasks:[{title:"Portfolio Project", explanation:"Create a mini art portfolio."}]},
+    {level:9, tasks:[{title:"Advanced Techniques", explanation:"Use textures, lighting, advanced brushes."}]},
+    {level:10, tasks:[{title:"Mastery Project", explanation:"Create a fully polished art piece as portfolio showcase."}]}
+  ],
+  sales: [
+    {level:1, tasks:[{title:"Learn Sales Terms", explanation:"Understand basic sales terminology."}]},
+    {level:2, tasks:[{title:"Create Sales Pitch", explanation:"Draft a short sales pitch."}]},
+    {level:3, tasks:[{title:"Cold Calling", explanation:"Practice cold calls with scripts."}]},
+    {level:4, tasks:[{title:"Objection Handling", explanation:"Learn to handle common objections."}]},
+    {level:5, tasks:[{title:"Closing Deals", explanation:"Practice closing deals in mock scenarios."}]},
+    {level:6, tasks:[{title:"CRM Software", explanation:"Learn basic CRM usage."}]},
+    {level:7, tasks:[{title:"Negotiation Skills", explanation:"Practice negotiations."}]},
+    {level:8, tasks:[{title:"Sales Project", explanation:"Create a full sales plan for a product."}]},
+    {level:9, tasks:[{title:"Team Leadership", explanation:"Learn to lead a sales team."}]},
+    {level:10, tasks:[{title:"Mastery Project", explanation:"Run a full sales campaign with strategy and report."}]}
+  ],
+  design: [
+    {level:1, tasks:[{title:"Basic Shapes & Colors", explanation:"Learn basic shapes and color usage in design."}]},
+    {level:2, tasks:[{title:"Typography Basics", explanation:"Learn fonts, spacing, and hierarchy."}]},
+    {level:3, tasks:[{title:"Layouts & Grids", explanation:"Design simple layouts using grids."}]},
+    {level:4, tasks:[{title:"UI Elements", explanation:"Design buttons, forms, and icons."}]},
+    {level:5, tasks:[{title:"Wireframing", explanation:"Create wireframes for a small app."}]},
+    {level:6, tasks:[{title:"Branding Basics", explanation:"Learn logos, color palettes, and style guides."}]},
+    {level:7, tasks:[{title:"Interactive Prototype", explanation:"Create a clickable prototype."}]},
+    {level:8, tasks:[{title:"Portfolio Project", explanation:"Assemble your design projects."}]},
+    {level:9, tasks:[{title:"Advanced Design", explanation:"Learn motion, animation, and advanced UX."}]},
+    {level:10, tasks:[{title:"Mastery Project", explanation:"Create a professional design portfolio project."}]}
+  ],
+  marketing: [
+    {level:1, tasks:[{title:"Marketing Basics", explanation:"Learn fundamentals of marketing."}]},
+    {level:2, tasks:[{title:"Audience Research", explanation:"Identify target audience."}]},
+    {level:3, tasks:[{title:"Content Creation", explanation:"Create marketing content."}]},
+    {level:4, tasks:[{title:"Social Media Marketing", explanation:"Plan posts and campaigns."}]},
+    {level:5, tasks:[{title:"Email Campaigns", explanation:"Create sample email campaigns."}]},
+    {level:6, tasks:[{title:"Analytics & Metrics", explanation:"Track engagement."}]},
+    {level:7, tasks:[{title:"Advertising Basics", explanation:"Learn paid advertising techniques."}]},
+    {level:8, tasks:[{title:"Marketing Project", explanation:"Plan and run a mock campaign."}]},
+    {level:9, tasks:[{title:"Brand Strategy", explanation:"Create brand guidelines."}]},
+    {level:10, tasks:[{title:"Mastery Project", explanation:"Run a full campaign, analyze results, report."}]}
+  ]
+};
 
-// --- Tasks Page ---
-if(document.getElementById('taskList')){
-  const level = parseInt(localStorage.getItem('level'));
-  const tasks = tasksPerLevel[level] || [];
-  const list = document.getElementById('taskList');
-  list.innerHTML='';
-  tasks.forEach((task,i)=>{
-    const li = document.createElement('li');
-    li.innerText=task;
-    li.onclick=()=>{
-      if(li.style.textDecoration==='line-through') return;
-      li.style.textDecoration='line-through';
-      let xp = parseInt(localStorage.getItem('xp')) + 20;
-      let tasksDone = parseInt(localStorage.getItem('tasksDone')) +1;
-      localStorage.setItem('xp', xp);
-      localStorage.setItem('tasksDone', tasksDone);
-      checkLevelUp();
-    };
-    list.appendChild(li);
+// ======== LEVELS PAGE ========
+function loadLevels() {
+  const levelsList = document.getElementById('levelsList');
+  if (!levelsList || !userPath) return;
+  levelsList.innerHTML = '';
+  masteryPaths[userPath].forEach(lvl => {
+    const div = document.createElement('div');
+    div.className = 'level-box';
+    div.innerHTML = `<h3>Level ${lvl.level}</h3>
+                     <ul>${lvl.tasks.map(t => `<li>${t.title}: ${t.explanation}</li>`).join('')}</ul>`;
+    levelsList.appendChild(div);
   });
 }
+if (document.getElementById('levelsList')) loadLevels();
 
-function completeAll(){
-  const level = parseInt(localStorage.getItem('level'));
-  const tasks = tasksPerLevel[level] || [];
-  let xp = parseInt(localStorage.getItem('xp')) + 20*tasks.length;
-  let tasksDone = parseInt(localStorage.getItem('tasksDone')) + tasks.length;
-  localStorage.setItem('xp', xp);
-  localStorage.setItem('tasksDone', tasksDone);
-  alert("All tasks completed! XP earned.");
-  checkLevelUp();
+// ======== TASKS PAGE ========
+function loadTasks() {
+  const tasksList = document.getElementById('tasksList');
+  if (!tasksList || !userPath) return;
+  tasksList.innerHTML = '';
+  const lvl = masteryPaths[userPath].find(l=>l.level===currentLevel);
+  lvl.tasks.forEach((task,i)=>{
+    const div = document.createElement('div');
+    div.className = 'task-box';
+    div.innerHTML = `<h4>${task.title}</h4><p>${task.explanation}</p>
+                     <button onclick="completeTask(${i})">${completedTasks[i]?'Completed':'Mark Complete'}</button>`;
+    tasksList.appendChild(div);
+  });
 }
-
-// --- Level-Up Logic ---
-function checkLevelUp(){
-  let xp = parseInt(localStorage.getItem('xp'));
-  let level = parseInt(localStorage.getItem('level'));
-  if(xp >= level*100 && level <10){
-    level++;
-    localStorage.setItem('level', level);
-    // Unlock next level
-    const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [1];
-    if(!completedLevels.includes(level)) completedLevels.push(level);
-    localStorage.setItem('completedLevels', JSON.stringify(completedLevels));
-    alert(`🎉 Level Up! You reached Level ${level}`);
-    window.location.href='dashboard.html';
+function completeTask(taskIndex){
+  completedTasks[taskIndex]=true;
+  localStorage.setItem('completedTasks',JSON.stringify(completedTasks));
+  currentXP+=10;
+  localStorage.setItem('currentXP',currentXP);
+  if(currentXP>=currentLevel*100){
+    currentLevel++;
+    localStorage.setItem('currentLevel',currentLevel);
   }
+  currentStreak++;
+  localStorage.setItem('currentStreak',currentStreak);
+  loadTasks();
 }
+if(document.getElementById('tasksList')) loadTasks();
 
-// --- Streak Logic ---
-function updateStreak(){
-  const lastDate = localStorage.getItem('lastDate');
-  const today = new Date().toDateString();
-  let streak = parseInt(localStorage.getItem('streak'));
-  if(lastDate!==today){
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate()-1);
-    if(lastDate===yesterday.toDateString()){ streak+=1; } else { streak=1; }
-    localStorage.setItem('streak', streak);
-    localStorage.setItem('lastDate', today);
-  }
-}
-updateStreak();
-
-// --- Progress Page ---
+// ======== PROGRESS PAGE ========
 if(document.getElementById('progressLevel')){
-  document.getElementById('progressLevel').innerText = localStorage.getItem('level');
-  document.getElementById('progressXP').innerText = localStorage.getItem('xp');
-  document.getElementById('progressStreak').innerText = localStorage.getItem('streak');
-  document.getElementById('tasksDone').innerText = localStorage.getItem('tasksDone');
+  document.getElementById('progressLevel').innerText=currentLevel;
+  document.getElementById('progressXP').innerText=currentXP;
+  document.getElementById('progressStreak').innerText=currentStreak;
+  const masteryPercent = Math.floor((currentLevel-1)/10*100);
+  document.getElementById('progressMastery').innerText=masteryPercent+'%';
 }
 
-// --- Profile / Journal ---
-if(document.getElementById('profileGoals')){
-  document.getElementById('profileGoals').innerText = (JSON.parse(localStorage.getItem('userGoals'))||[]).join(', ');
-  document.getElementById('journal').value = localStorage.getItem('journal');
-}
+// ======== PROFILE PAGE ========
+if(document.getElementById('profileName')) document.getElementById('profileName').innerText=username;
+if(document.getElementById('profilePath')) document.getElementById('profilePath').innerText=userPath;
+if(document.getElementById('profileLevel')) document.getElementById('profileLevel').innerText=currentLevel;
+if(document.getElementById('profileXP')) document.getElementById('profileXP').innerText=currentXP;
+if(document.getElementById('profileStreak')) document.getElementById('profileStreak').innerText=currentStreak;
 
-function saveJournal(){
-  const text = document.getElementById('journal').value;
-  localStorage.setItem('journal', text);
-  alert("Journal saved!");
-}
+function resetProgress(){
+  if(confirm('Are you sure you want to reset your progress?')){
+    localStorage.clear();
+    window.location.href='index.html';
+  }
+    }
